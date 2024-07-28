@@ -45,7 +45,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/admin/projects', ProjectController::class);
     // Rute untuk approval proyek
     Route::put('/admin/projects/{id}/approve', [ProjectController::class, 'approve'])->name('admin.projects.approve');
-
     // Rute untuk rejection proyek
     Route::put('/admin/projects/{id}/reject', [ProjectController::class, 'reject'])->name('admin.projects.reject');
 

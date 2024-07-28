@@ -15,12 +15,11 @@
                     </button>
                 </div>
             @endif
-            <h1>Daftar Pelanggan</h1>
 
             @if ($customers->isEmpty())
-                <p class="empty">Belum ada pelanggan yang terdaftar.</p>
+                <div class="empty">Tidak ada customers yang tersedia.</div>
             @else
-                <table class="table mt-3">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -37,21 +36,23 @@
                         @foreach ($customers as $customer)
                             <tr>
                                 <td>{{ ++$i }}</td>
-                                <td>{{ $customer->lead->name }}</td>
-                                <td>{{ $customer->lead->email }}</td>
-                                <td>{{ $customer->lead->phone }}</td>
-                                <td>{{ $customer->product->name }}</td>
+                                <td>{{ $customer->lead ? $customer->lead->name : 'N/A' }}</td>
+                                <td>{{ $customer->lead ? $customer->lead->email : 'N/A' }}</td>
+                                <td>{{ $customer->lead ? $customer->lead->phone : 'N/A' }}</td>
+                                <td>{{ $customer->product ? $customer->product->name : 'N/A' }}</td>
                                 <td>{{ $customer->created_at->format('d M Y') }}</td>
                                 <td>
-                                    <a href="{{ route('customers.edit', $customer->id) }}"
-                                        class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('customers.destroy', $customer->id) }}" method="POST"
-                                        style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
-                                    </form>
+                                    @unless (auth()->user()->role == 'manager')
+                                        <a href="{{ route('customers.edit', $customer->id) }}"
+                                            class="btn btn-warning btn-sm">Edit</a>
+                                        <form action="{{ route('customers.destroy', $customer->id) }}" method="POST"
+                                            style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
+                                        </form>
+                                    @endunless
                                 </td>
                             </tr>
                         @endforeach

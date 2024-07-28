@@ -13,8 +13,13 @@ class DashboardController extends Controller
     {
         // Retrieve counts
         $productCount = Product::count();
-        $leadCount = Lead::count();
-        $projectCount = Project::count();
+
+        // Count leads that are not approved
+        $leadCount = Lead::where('status', '!=', 'approved')->count();
+
+        // Count projects that are not approved or rejected
+        $projectCount = Project::where('status', 'pending')->count();
+
         $customerCount = Customer::count();
 
         // Pass data to the view
